@@ -35,7 +35,7 @@ class FileStorage:
         return self.__objects
 
     def get(self, cls, id):
-        """returns the dictionary __objects"""
+        """returns the dictionary __objects based on id"""
         if cls is not None:
             new_dict = {}
             for key, value in self.__objects.items():
@@ -44,6 +44,16 @@ class FileStorage:
                         new_dict[key] = value
             return new_dict
         return self.__objects
+
+    def count(self, cls=None):
+        """returns the number of dictionary __objects"""
+        if cls is not None:
+            new_dict = {}
+            for key, value in self.__objects.items():
+                if cls == value.__class__ or cls == value.__class__.__name__:
+                    new_dict[key] = value
+            return len(new_dict)
+        return len(self.__objects)
 
     def new(self, obj):
         """sets in __objects the obj with key <obj class name>.id"""

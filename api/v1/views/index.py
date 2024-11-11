@@ -17,6 +17,6 @@ def status():
 def stats():
     """return stats for each column"""
     fullstats = {}
-    for cls in classes:
-        fullstats[cls] = storage.count(classes[cls])
-        return jsonify(fullstats)
+    for key, value in classes.items():
+        fullstats[key] = storage.count(value)
+    return jsonify(fullstats)

@@ -6,9 +6,10 @@ from models import storage
 
 @app_views.route('/states', strict_slashes=False)
 def states():
-    """return status of our api"""
+    """return states objects as a list with all details"""
     states_list = []
     response1 = storage.all()
     for key, value in response1.items():
-        states_list.append(value.to_dict())
+        if key.split(".")[0] == "State":
+            states_list.append(value.to_dict())
     return jsonify(states_list)

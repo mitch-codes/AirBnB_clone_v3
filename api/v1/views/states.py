@@ -58,17 +58,20 @@ def add_state():
 @app_views.route('/states/<state_id>', methods=['PUT'])
 def modify_state(state_id):
     """return state object after modification"""
+    states_list = []
     state_json = request.get_json()
-    state_item = {}
-    for key, value in state_json.items():
+    if state_json == None:
+        return make_response("Not a JSON", 400)
+    if 'name' not in state_json:
+        return make_response("Missing name", 400)
+    response1 = storage.all()
+    for key, value in response1.items():
         if key.split(".")[0] == "State" and value.id == state_id:
-            state_item = value.to_dict()
-            for inkey, inval in state_json.items():
-                if inkey != "id" and inkey != "created_at" and inkey != "updated_at":
-                    state_item[inkey] = inval 
-            storage.delete(value)
-            storage.save()
-            new_state = State(**state_item)
-            storage.new(new_state)
-            storage.save()
-    return jsonify(state_item)
+            states_list.append(value)
+    if len(states_list) == 0:
+        abort(404)
+    for key, value in state_json.items():
+        if key != "id" and key != "created_at" and key != "updated_at":
+            states_list[0].__dict__[key] = value
+    storage.save()
+    return jsonify(states_list[0].to_dict())

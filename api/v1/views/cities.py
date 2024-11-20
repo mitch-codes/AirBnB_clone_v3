@@ -14,16 +14,16 @@ def cities(state_id):
     city_list = []
     response1 = storage.all()
     for key, value in response1.items():
-        if key.split(".")[0] == "State" and value.id == state_id:
-            states_list.append(value)
+        if key.split(".")[0] == "State" and key.split(".")[1] == state_id:
+            states_list.append(value.to_dict())
     if len(states_list) == 0:
         abort(404)
     for key1, value1 in response1.items():
-        if key1.split(".")[0] == "City" and value1.state_id == states_list[0].id:
+        if key1.split(".")[0] == "City" and value1.state_id == state_id:
             city_list.append(value1.to_dict())
     return jsonify(city_list)
 
-@app_views.route('/city/<city_id>')
+@app_views.route('/cities/<city_id>')
 def city_id(city_id):
     """return a city based on its id"""
     city_list = []
@@ -35,7 +35,7 @@ def city_id(city_id):
         abort(404)
     return jsonify(city_list[0])
 
-@app_views.route('/city/<city_id>', methods=['DELETE'])
+@app_views.route('/cities/<city_id>', methods=['DELETE'])
 def del_city(city_id):
     """delete a city"""
     city_list = []
@@ -68,7 +68,7 @@ def add_city(state_id):
     new_city = City(**city_json)
     storage.new(new_city)
     storage.save()
-    return make_response(jsonify(city_json), 201)
+    return make_response(jsonify(new_city.to_dict()), 201)
 
 @app_views.route('/cities/<city_id>', methods=['PUT'])
 def modify_city(city_id):
@@ -89,4 +89,4 @@ def modify_city(city_id):
         if key != "id" and key != "created_at" and key != "updated_at":
             city_list[0].__dict__[key] = value
     storage.save()
-    return jsonify(city_list[0].to_dict())
+    return make_response(jsonify({}), 200)

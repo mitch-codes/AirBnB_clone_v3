@@ -88,5 +88,10 @@ def modify_city(city_id):
     for key, value in city_json.items():
         if key != "id" and key != "created_at" and key != "updated_at":
             city_list[0].__dict__[key] = value
+    temp_dict = city_list[0].to_dict()
+    new_city = City(**temp_dict)
+    storage.delete(city_list[0])
+    storage.new(new_city)
     storage.save()
-    return make_response(jsonify({}), 200)
+    #return make_response(jsonify({}), 200)
+    return make_response(jsonify(city_list[0].to_dict()), 200)

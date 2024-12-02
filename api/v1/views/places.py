@@ -29,7 +29,7 @@ def place_id(place_id):
     place_list = []
     response1 = storage.all()
     for key, value in response1.items():
-        if key.split(".")[0] == "place" and value.id == place_id:
+        if key.split(".")[0] == "Place" and value.id == place_id:
             place_list.append(value.to_dict())
     if len(place_list) == 0:
         abort(404)
@@ -41,13 +41,13 @@ def del_place(place_id):
     place_list = []
     response1 = storage.all()
     for key, value in response1.items():
-        if key.split(".")[0] == "place" and value.id == place_id:
+        if key.split(".")[0] == "Place" and value.id == place_id:
             place_list.append(value)
     if len(place_list) == 0:
         abort(404)
     storage.delete(place_list[0])
     storage.save()
-    return str(place_list[0])
+    return make_response(jsonify({}), 200)
 
 @app_views.route('/cities/<city_id>/places', methods=['POST'])
 def add_place(city_id):
@@ -81,7 +81,7 @@ def modify_place(place_id):
         return make_response("Missing name", 400)
     response1 = storage.all()
     for key, value in response1.items():
-        if key.split(".")[0] == "place" and value.id == place_id:
+        if key.split(".")[0] == "Place" and value.id == place_id:
             place_list.append(value)
     if len(place_list) == 0:
         abort(404)
